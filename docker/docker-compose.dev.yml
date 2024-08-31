@@ -1,0 +1,53 @@
+services:
+  postgres:
+    image: postgres:16
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+    - POSTGRES_USER=postgres
+    - POSTGRES_PASSWORD=postgres
+    - POSTGRES_DB=buk-db
+    volumes:
+      - local_pgdata:/var/lib/postgresql/data
+    networks:
+      - db_network
+  localstack:
+    container_name: localstack-buk
+    image: localstack/localstack:latest
+    ports:
+      - "4566:4566" # LocalStack Gateway
+      - "4510-4559:4510-4559" # external services port range
+    environment:
+    # LocalStack configuration: https://docs.localstack.cloud/references/configuration/
+      # if needs log
+      - DEBUG=0
+      # just s3 why yes
+      - SERVICES=s3
+      - AWS_DEFAULT_REGION=us-east-1
+      - DATA_DIR=/tmp/localstack/data
+    volumes:
+      - ./localstack:/var/lib/localstack
+      - "/var/run/docker.sock:/var/run/docker.sock"
+
+  pgadmin:
+    image: elestio/pgadmin:REL-8_8
+
+    restart: always
+    ports:
+      - "8888:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: test@example.com
+      PGADMIN_DEFAULT_PASSWORD: postgres
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+    networks:
+      - db_network
+
+
+volumes:
+  local_pgdata:
+  pgadmin-data:
+
+networks:
+  db_network:
