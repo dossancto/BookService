@@ -42,7 +42,7 @@ defmodule BooksManagmentWeb.AuthorControllerTest do
 
   describe "create author" do
     test "renders author when data is valid", %{conn: conn} do
-      conn = post(conn, ~p"/api/authors", author: @create_attrs)
+      conn = post(conn, ~p"/api/authors", @create_attrs)
       assert %{"id" => id} = json_response(conn, 201)["data"]
 
       conn = get(conn, ~p"/api/authors/#{id}")
