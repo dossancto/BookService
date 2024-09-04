@@ -14,7 +14,7 @@ defmodule BooksManagment.ManagmentFixtures do
         bio: "some bio",
         birth_date: ~U[2024-09-02 00:49:00Z],
         contact_email: "some contact_email",
-        death_date: ~U[2024-09-02 00:49:00Z],
+        death_date: ~U[2025-09-02 00:49:00Z],
         display_name: "some display_name",
         full_name: "some full_name",
         image_url: "some image_url",

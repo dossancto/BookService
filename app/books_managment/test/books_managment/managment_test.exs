@@ -21,7 +21,7 @@ defmodule BooksManagment.ManagmentTest do
     end
 
     test "create_author/1 with valid data creates a author" do
-      valid_attrs = %{location: "some location", full_name: "some full_name", display_name: "some display_name", contact_email: "some contact_email", birth_date: ~U[2024-09-02 00:49:00Z], death_date: ~U[2024-09-02 00:49:00Z], bio: "some bio", image_url: "some image_url", userId: "some userId"}
+      valid_attrs = %{location: "some location", full_name: "some full_name", display_name: "some display_name", contact_email: "some contact_email", birth_date: ~U[2024-09-02 00:49:00Z], death_date: ~U[2025-12-02 00:49:00Z], bio: "some bio", image_url: "some image_url", userId: "some userId"}
 
       assert {:ok, %Author{} = author} = Managment.create_author(valid_attrs)
       assert author.location == "some location"
@@ -29,7 +29,7 @@ defmodule BooksManagment.ManagmentTest do
       assert author.display_name == "some display_name"
       assert author.contact_email == "some contact_email"
       assert author.birth_date == ~U[2024-09-02 00:49:00Z]
-      assert author.death_date == ~U[2024-09-02 00:49:00Z]
+      assert author.death_date == ~U[2025-12-02 00:49:00Z]
       assert author.bio == "some bio"
       assert author.image_url == "some image_url"
       assert author.userId == "some userId"
@@ -41,7 +41,7 @@ defmodule BooksManagment.ManagmentTest do
 
     test "update_author/2 with valid data updates the author" do
       author = author_fixture()
-      update_attrs = %{location: "some updated location", full_name: "some updated full_name", display_name: "some updated display_name", contact_email: "some updated contact_email", birth_date: ~U[2024-09-03 00:49:00Z], death_date: ~U[2024-09-03 00:49:00Z], bio: "some updated bio", image_url: "some updated image_url", userId: "some updated userId"}
+      update_attrs = %{location: "some updated location", full_name: "some updated full_name", display_name: "some updated display_name", contact_email: "some updated contact_email", birth_date: ~U[2024-09-03 00:49:00Z], death_date: ~U[2025-12-03 00:49:00Z], bio: "some updated bio", image_url: "some updated image_url", userId: "some updated userId"}
 
       assert {:ok, %Author{} = author} = Managment.update_author(author, update_attrs)
       assert author.location == "some updated location"
@@ -49,7 +49,7 @@ defmodule BooksManagment.ManagmentTest do
       assert author.display_name == "some updated display_name"
       assert author.contact_email == "some updated contact_email"
       assert author.birth_date == ~U[2024-09-03 00:49:00Z]
-      assert author.death_date == ~U[2024-09-03 00:49:00Z]
+      assert author.death_date == ~U[2025-12-03 00:49:00Z]
       assert author.bio == "some updated bio"
       assert author.image_url == "some updated image_url"
       assert author.userId == "some updated userId"
