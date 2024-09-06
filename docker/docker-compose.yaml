@@ -5,13 +5,14 @@ services:
     ports:
       - "5432:5432"
     environment:
-    - POSTGRES_USER=postgres
-    - POSTGRES_PASSWORD=postgres
-    - POSTGRES_DB=buk-db
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=buk-db
     volumes:
       - local_pgdata:/var/lib/postgresql/data
     networks:
       - db_network
+
   localstack:
     container_name: localstack-buk
     image: localstack/localstack:latest
@@ -19,7 +20,7 @@ services:
       - "4566:4566" # LocalStack Gateway
       - "4510-4559:4510-4559" # external services port range
     environment:
-    # LocalStack configuration: https://docs.localstack.cloud/references/configuration/
+      # LocalStack configuration: https://docs.localstack.cloud/references/configuration/
       # if needs log
       - DEBUG=0
       # just s3 why yes
@@ -29,6 +30,29 @@ services:
     volumes:
       - ./localstack:/var/lib/localstack
       - "/var/run/docker.sock:/var/run/docker.sock"
+
+  bookservice.account:
+    build:
+      context: ../app/Account/src/Buk.Account/
+      dockerfile: account.Dockerfile
+    ports:
+      - "5246:5246"
+    environment:
+      - DATABASE__POSTGRES__CONNECTION_STRING=Server=postgres;Port=5432;Database=buk-users-db;User Id=postgres;Password=postgres
+    networks:
+      - db_network
+
+  bookservice.managment:
+    build:
+      context: ../app/books_managment/
+      dockerfile: dev.Dockerfile
+    ports:
+      - 4000:4000
+    environment:
+      - DATABASE_URL=postgres://postgres:postgres@postgres:5432/books_managment?sslmode=disable
+      - DEV_DB_HOSTNAME=postgres
+    networks:
+      - db_network
 
   pgadmin:
     image: elestio/pgadmin:REL-8_8
@@ -44,10 +68,10 @@ services:
     networks:
       - db_network
 
-
 volumes:
   local_pgdata:
   pgadmin-data:
+
 
 networks:
   db_network:
