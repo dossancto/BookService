@@ -41,6 +41,8 @@ services:
       - "5246:5246"
     environment:
       - DATABASE__POSTGRES__CONNECTION_STRING=Server=postgres;Port=5432;Database=buk-users-db;User Id=postgres;Password=postgres
+    depends_on:
+      - postgres
     networks:
       - db_network
 
@@ -50,6 +52,8 @@ services:
       dockerfile: dev.Dockerfile
     ports:
       - 3000:3000
+    depends_on:
+      - postgres
     networks:
       - db_network
 
@@ -62,11 +66,15 @@ services:
     environment:
       - DATABASE_URL=postgres://postgres:postgres@postgres:5432/books_managment?sslmode=disable
       - DEV_DB_HOSTNAME=postgres
+    depends_on:
+      - postgres
     networks:
       - db_network
 
   pgadmin:
     image: elestio/pgadmin:REL-8_8
+    depends_on:
+      - postgres
 
     restart: always
     ports:
