@@ -44,6 +44,15 @@ services:
     networks:
       - db_network
 
+  bookservice.frontend.main:
+    build:
+      context: ../app/buk-main-front/
+      dockerfile: dev.Dockerfile
+    ports:
+      - 3000:3000
+    networks:
+      - db_network
+
   bookservice.managment:
     build:
       context: ../app/books_managment/
