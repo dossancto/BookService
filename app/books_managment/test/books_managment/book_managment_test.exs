@@ -21,22 +21,22 @@ defmodule BooksManagment.BookManagmentTest do
     end
 
     test "create_book/1 with valid data creates a book" do
-      valid_attrs = %{format: "some format", description: "some description", title: "some title", category: "some category", language: "some language", release_date: ~N[2024-09-06 12:35:00], summary: "some summary", avaible: true, images: ["option1", "option2"], rating: 42, page_count: 42, price: 42, isbn: "some isbn"}
+      valid_attrs = %{format: "pdf", description: "some description", title: "some title", category: "programming", language: "some language", release_date: ~N[2024-09-06 12:35:00], summary: "some summary", avaible: true, images: ["https://some-url.com.br", "https://some-url-2.com.br"], rating: 42, page_count: 42, price: 2000, isbn: "1-56619-909-3"}
 
       assert {:ok, %Book{} = book} = BookManagment.create_book(valid_attrs)
-      assert book.format == "some format"
+      assert book.format == "pdf"
       assert book.description == "some description"
       assert book.title == "some title"
-      assert book.category == "some category"
+      assert book.category == "programming"
       assert book.language == "some language"
       assert book.release_date == ~N[2024-09-06 12:35:00]
       assert book.summary == "some summary"
       assert book.avaible == true
-      assert book.images == ["option1", "option2"]
+      assert book.images == ["https://some-url.com.br", "https://some-url-2.com.br"]
       assert book.rating == 42
       assert book.page_count == 42
-      assert book.price == 42
-      assert book.isbn == "some isbn"
+      assert book.price == 2000
+      assert book.isbn == "1-56619-909-3"
     end
 
     test "create_book/1 with invalid data returns error changeset" do
@@ -45,22 +45,22 @@ defmodule BooksManagment.BookManagmentTest do
 
     test "update_book/2 with valid data updates the book" do
       book = book_fixture()
-      update_attrs = %{format: "some updated format", description: "some updated description", title: "some updated title", category: "some updated category", language: "some updated language", release_date: ~N[2024-09-07 12:35:00], summary: "some updated summary", avaible: false, images: ["option1"], rating: 43, page_count: 43, price: 43, isbn: "some updated isbn"}
+      update_attrs = %{format: "pdf", description: "some updated description", title: "some updated title", category: "english", language: "some updated language", release_date: ~N[2024-09-07 12:35:00], summary: "some updated summary", avaible: false, images: ["https://some-url-3.com.br"], rating: 43, page_count: 43, price: 2500, isbn: "1-56619-909-3"}
 
       assert {:ok, %Book{} = book} = BookManagment.update_book(book, update_attrs)
-      assert book.format == "some updated format"
+      assert book.format == "pdf"
       assert book.description == "some updated description"
       assert book.title == "some updated title"
-      assert book.category == "some updated category"
+      assert book.category == "english"
       assert book.language == "some updated language"
       assert book.release_date == ~N[2024-09-07 12:35:00]
       assert book.summary == "some updated summary"
       assert book.avaible == false
-      assert book.images == ["option1"]
+      assert book.images == ["https://some-url-3.com.br"]
       assert book.rating == 43
       assert book.page_count == 43
-      assert book.price == 43
-      assert book.isbn == "some updated isbn"
+      assert book.price == 2500
+      assert book.isbn == "1-56619-909-3"
     end
 
     test "update_book/2 with invalid data returns error changeset" do

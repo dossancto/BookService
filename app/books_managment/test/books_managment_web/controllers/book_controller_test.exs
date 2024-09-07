@@ -6,36 +6,48 @@ defmodule BooksManagmentWeb.BookControllerTest do
   alias BooksManagment.BookManagment.Book
 
   @create_attrs %{
-    format: "some format",
     description: "some description",
     title: "some title",
-    category: "some category",
+    category: "programming",
     language: "some language",
     release_date: ~N[2024-09-06 12:35:00],
     summary: "some summary",
     avaible: true,
-    images: ["option1", "option2"],
-    rating: 42,
+    images: ["https://some-url.com.br", "https://some-url-2.com.br"],
     page_count: 42,
-    price: 42,
-    isbn: "some isbn"
+    price: 2500,
+    isbn: "1-56619-909-3"
   }
   @update_attrs %{
-    format: "some updated format",
+    format: "pdf",
     description: "some updated description",
     title: "some updated title",
-    category: "some updated category",
+    category: "english",
     language: "some updated language",
     release_date: ~N[2024-09-07 12:35:00],
     summary: "some updated summary",
     avaible: false,
-    images: ["option1"],
-    rating: 43,
+    images: ["https://some-url-3.com.br"],
+    rating: 5,
     page_count: 43,
-    price: 43,
-    isbn: "some updated isbn"
+    price: 3000,
+    isbn: "1-56619-909-3"
   }
-  @invalid_attrs %{format: nil, description: nil, title: nil, category: nil, language: nil, release_date: nil, summary: nil, avaible: nil, images: nil, rating: nil, page_count: nil, price: nil, isbn: nil}
+  @invalid_attrs %{
+    format: nil,
+    description: nil,
+    title: nil,
+    category: nil,
+    language: nil,
+    release_date: nil,
+    summary: nil,
+    avaible: nil,
+    images: nil,
+    rating: nil,
+    page_count: nil,
+    price: nil,
+    isbn: nil
+  }
 
   setup %{conn: conn} do
     {:ok, conn: put_req_header(conn, "accept", "application/json")}
@@ -54,19 +66,31 @@ defmodule BooksManagmentWeb.BookControllerTest do
       assert %{"id" => id} = json_response(conn, 201)["data"]
 
       conn = get(conn, ~p"/api/books/#{id}")
-
+      # {
+      #     description: "some description",
+      #     title: "some title",
+      #     category: "programming",
+      #     language: "some language",
+      #     release_date: ~N[2024-09-06 12:35:00],
+      #     summary: "some summary",
+      #     avaible: true,
+      #     images: ["https://some-url.com.br", "https://some-url-2.com.br"],
+      #     page_count: 42,
+      #     price: 2500,
+      #     isbn: "978-1-56619-909-4 2"
+      #   }
       assert %{
                "id" => ^id,
                "avaible" => true,
-               "category" => "some category",
+               "category" => "programming",
                "description" => "some description",
-               "format" => "some format",
-               "images" => ["option1", "option2"],
-               "isbn" => "some isbn",
+               "format" => "pdf",
+               "images" => ["https://some-url.com.br", "https://some-url-2.com.br"],
+               "isbn" => "1-56619-909-3",
                "language" => "some language",
                "page_count" => 42,
-               "price" => 42,
-               "rating" => 42,
+               "price" => 2500,
+               "rating" => 0,
                "release_date" => "2024-09-06T12:35:00",
                "summary" => "some summary",
                "title" => "some title"
@@ -89,21 +113,21 @@ defmodule BooksManagmentWeb.BookControllerTest do
       conn = get(conn, ~p"/api/books/#{id}")
 
       assert %{
-               "id" => ^id,
-               "avaible" => false,
-               "category" => "some updated category",
-               "description" => "some updated description",
-               "format" => "some updated format",
-               "images" => ["option1"],
-               "isbn" => "some updated isbn",
-               "language" => "some updated language",
-               "page_count" => 43,
-               "price" => 43,
-               "rating" => 43,
-               "release_date" => "2024-09-07T12:35:00",
-               "summary" => "some updated summary",
-               "title" => "some updated title"
-             } = json_response(conn, 200)["data"]
+             "id" => ^id,
+              "avaible" => false,
+              "category" => "english",
+              "description" => "some updated description",
+              "format" => "pdf",
+              "images" => ["https://some-url-3.com.br"],
+              "isbn" => "1-56619-909-3",
+              "language" => "some updated language",
+              "page_count" => 43,
+              "price" => 3000,
+              "rating" => 5,
+              "release_date" => "2024-09-07T12:35:00",
+              "summary" => "some updated summary",
+              "title" => "some updated title"
+            } = json_response(conn, 200)["data"]
     end
 
     test "renders errors when data is invalid", %{conn: conn, book: book} do

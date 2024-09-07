@@ -5,7 +5,7 @@ defmodule BooksManagment.BookManagment.Book do
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
   schema "books" do
-    field :format, :string
+    field :format, :string, default: "pdf"
     field :description, :string
     field :title, :string
     field :category, :string
@@ -14,7 +14,7 @@ defmodule BooksManagment.BookManagment.Book do
     field :summary, :string
     field :avaible, :boolean, default: false
     field :images, {:array, :string}
-    field :rating, :integer
+    field :rating, :integer, default: 0
     field :page_count, :integer
     field :price, :integer
     field :isbn, :string
@@ -88,7 +88,7 @@ defmodule BooksManagment.BookManagment.Book do
   defp validate_images(changeset) do
     images = get_field(changeset, :images)
 
-    if Enum.all?(images, &valid_url?/1) do
+    if images != nil and Enum.all?(images, &valid_url?/1) do
       changeset
     else
       add_error(changeset, :images, "Make sure all urls are valid")

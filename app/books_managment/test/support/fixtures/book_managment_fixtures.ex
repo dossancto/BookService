@@ -12,15 +12,15 @@ defmodule BooksManagment.BookManagmentFixtures do
       attrs
       |> Enum.into(%{
         avaible: true,
-        category: "some category",
+        category: "programming",
         description: "some description",
-        format: "some format",
-        images: ["option1", "option2"],
-        isbn: "some isbn",
+        format: "pdf",
+        images: ["https://some-url.com.br", "https://some-url-2.com.br"],
+        isbn: "1-56619-909-3",
         language: "some language",
         page_count: 42,
-        price: 42,
-        rating: 42,
+        price: 2000,
+        rating: 0,
         release_date: ~N[2024-09-06 12:35:00],
         summary: "some summary",
         title: "some title"
