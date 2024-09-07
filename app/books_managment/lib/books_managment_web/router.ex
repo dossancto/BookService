@@ -9,6 +9,7 @@ defmodule BooksManagmentWeb.Router do
     pipe_through :api
 
     resources "/authors", AuthorController, except: [:new, :edit]
+    resources "/books", BookController, except: [:new, :edit]
   end
 
   # Enable LiveDashboard and Swoosh mailbox preview in development
