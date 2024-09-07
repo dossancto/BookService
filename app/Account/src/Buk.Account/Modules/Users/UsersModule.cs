@@ -1,4 +1,5 @@
 using Buk.Account.Modules.Users.Adapters.Database.Postgres.Entities;
+using Buk.Account.Modules.Users.Adapters.Providers.Email.Brevo;
 using Buk.Account.Modules.Users.Adapters.Providers.Email.Mock;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
@@ -32,9 +33,33 @@ public static class UsersModuleInjector
         return services;
     }
 
-    private static void AddEmailProviders(IServiceCollection services)
+    public static void AddEmailProviders(this IServiceCollection services)
     {
-        // services.AddTransient<IEmailSender<PostgresUser>, MockEmailProvider>();
-        services.AddTransient<IEmailSender, MockEmailProvider>();
+        var env = AppEnv.ASPNETCORE_ENVIRONMENT.GetDefault("Development");
+
+        var useRealEmailProvider = AppEnv.EMAIL_SENDER.GLOBAL.USE_REAL_EMAIL_PROVIDER.GetDefault(false);
+
+        if (env == "Development" && useRealEmailProvider is false)
+        {
+            services.AddTransient<IEmailSender, MockEmailProvider>();
+
+            return;
+        }
+
+        services.AddBrevoEmailSender();
+
+        return;
+    }
+
+    public static IServiceCollection AddBrevoEmailSender(this IServiceCollection services)
+    {
+        services.AddHttpClient<IEmailSender, BrevoEmailSender>(x =>
+        {
+            x.BaseAddress = new(AppEnv.EMAIL_SENDER.BREVO.BASE_URL.NotNull());
+
+            x.DefaultRequestHeaders.Add("Api-Key", AppEnv.EMAIL_SENDER.BREVO.API_KEY.NotNull());
+        });
+
+        return services;
     }
 }
