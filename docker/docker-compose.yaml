@@ -9,7 +9,9 @@ services:
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_DB=buk-db
     volumes:
+      - ./Scripts/postgres:/docker-entrypoint-initdb.d
       - local_pgdata:/var/lib/postgresql/data
+
     networks:
       - db_network
 
