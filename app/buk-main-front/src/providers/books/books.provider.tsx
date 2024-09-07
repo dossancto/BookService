@@ -1,10 +1,10 @@
 import axios, { AxiosInstance } from "axios";
-import { LoginInput, LoginOutput, LoginOutputError } from "./types/auth.login.types";
-import { fail, Result, success } from "@/utils/errors-handlers/result-pattern";
+import { Result, success } from "@/utils/errors-handlers/result-pattern";
 import { isFailStatusCode } from "@/utils/requests/status-code";
 import { BadRequestError, handleAxiosFail } from "@/utils/requests/bad-requests";
+import { BooksListError, BooksListInput, BooksListOutput } from "./types/books.list.types";
 
-export class AuthProvider {
+export class BooksProvider {
   private axiosInstance: AxiosInstance
 
   constructor(a: AxiosInstance | undefined = undefined) {
@@ -14,10 +14,10 @@ export class AuthProvider {
       return;
     }
 
-    const BASE_URL = process.env.AUTH_BASE_URL;
+    const BASE_URL = process.env.AUTH_BOOKS_URL;
 
     if (!BASE_URL) {
-      throw new Error('AUTH_BASE_URL is not defined');
+      throw new Error('AUTH_BOOKS_URL is not defined');
     }
 
     this.axiosInstance = axios.create({
@@ -27,17 +27,18 @@ export class AuthProvider {
     this.axiosInstance.defaults.validateStatus = () => true
   }
 
-  async login(input: LoginInput): Promise<Result<LoginOutput, BadRequestError<LoginOutputError>>> {
-    const res = await this.axiosInstance.post('/login', input);
+  async list(_input: BooksListInput): Promise<Result<BooksListOutput[], BadRequestError<BooksListError>>> {
+    const res = await this.axiosInstance.get('/books');
 
     if (isFailStatusCode(res.status)) {
-      return handleAxiosFail(res, "Fail to login");
+      return handleAxiosFail(res);
     }
 
     const json = res.data;
 
-    const data = json as LoginOutput;
+    const data = json as BooksListOutput[];
 
     return success(data);
   }
 }
+
