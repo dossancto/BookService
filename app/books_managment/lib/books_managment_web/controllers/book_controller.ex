@@ -12,6 +12,11 @@ defmodule BooksManagmentWeb.BookController do
   end
 
   def create(conn, book_params) do
+    book_params =
+      book_params
+      |> Map.put("rating", 0)
+      |> Map.put("format", "pdf")
+
     with {:ok, %Book{} = book} <- BookManagment.create_book(book_params) do
       conn
       |> put_status(:created)
