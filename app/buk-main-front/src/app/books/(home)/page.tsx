@@ -1,11 +1,9 @@
-import { BooksProvider } from "@/providers/books/books.provider";
+import { listBooksRecipe } from "@/providers/books/books.provider.list";
 import { BooksListError, BooksListOutput } from "@/providers/books/types/books.list.types";
 import { BadRequestError } from "@/utils/requests/bad-requests";
 
 export default async function Home() {
-  var booksProvider = new BooksProvider();
-
-  const booksRes = await booksProvider.list({});
+  const booksRes = await listBooksRecipe({})
 
   if (booksRes.kind == "failure") return handleBookFail(booksRes.error);
 
