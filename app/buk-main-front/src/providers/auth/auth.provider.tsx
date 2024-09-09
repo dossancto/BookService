@@ -1,43 +1,23 @@
-import axios, { AxiosInstance } from "axios";
-import { LoginInput, LoginOutput, LoginOutputError } from "./types/auth.login.types";
-import { fail, Result, success } from "@/utils/errors-handlers/result-pattern";
-import { isFailStatusCode } from "@/utils/requests/status-code";
-import { BadRequestError, handleAxiosFail } from "@/utils/requests/bad-requests";
+import { HttpRequest } from "../http/http.provider.types";
+import { getAxiosInstance } from "../http/http.provider.axios";
 
-export class AuthProvider {
-  private axiosInstance: AxiosInstance
 
-  constructor(a: AxiosInstance | undefined = undefined) {
-    if (a) {
-      this.axiosInstance = a;
-      this.axiosInstance.defaults.validateStatus = () => true
-      return;
-    }
+export function useAuthAxios<TIn, TOut>(f: HttpRequest<TIn, TOut>): (d: TIn) => TOut {
+  const BASE_URL = getAuthUrl();
 
-    const BASE_URL = process.env.AUTH_BASE_URL;
+  const axiosInstance = getAxiosInstance({
+    baseURL: BASE_URL,
+  });
 
-    if (!BASE_URL) {
-      throw new Error('AUTH_BASE_URL is not defined');
-    }
+  return (d: TIn) => f(axiosInstance, d);
+}
 
-    this.axiosInstance = axios.create({
-      baseURL: BASE_URL,
-    });
+function getAuthUrl() {
+  const BASE_URL = process.env.AUTH_BASE_URL;
 
-    this.axiosInstance.defaults.validateStatus = () => true
+  if (!BASE_URL) {
+    throw new Error('AUTH_BASE_URL is not defined');
   }
 
-  async login(input: LoginInput): Promise<Result<LoginOutput, BadRequestError<LoginOutputError>>> {
-    const res = await this.axiosInstance.post('/login', input);
-
-    if (isFailStatusCode(res.status)) {
-      return handleAxiosFail(res, "Fail to login");
-    }
-
-    const json = res.data;
-
-    const data = json as LoginOutput;
-
-    return success(data);
-  }
+  return BASE_URL;
 }

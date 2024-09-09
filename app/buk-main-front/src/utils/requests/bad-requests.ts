@@ -1,28 +1,28 @@
-import { AxiosResponse } from "axios";
+import { HttpResponse } from "@/providers/http/http.provider.types";
 import { fail, Failure } from "../errors-handlers/result-pattern";
 
 export type BadRequestError<T> = {
   statusCode: number;
   error: T | undefined;
-  metatata: AxiosFailMetadata;
+  metatata: HttpFailMetadata;
 }
 
-export type AxiosFailMetadata = {
+export type HttpFailMetadata = {
   endpoint: string;
   baseAddress: string;
   message: string;
   details: string;
 }
 
-export type AxiosFailInfos = {
+export type HttpFailInfos = {
   baseUrl: string,
   module: string
 }
 
-export function handleAxiosFail<TError>(res: AxiosResponse<any, any>, message: string | undefined = undefined): Failure<BadRequestError<TError>> {
+export function handleHttpFail<TError>(res: HttpResponse<any>, message: string | undefined = undefined): Failure<BadRequestError<TError>> {
   const expectedError = res.data as TError | undefined
 
-  const path = res.config.url
+  const path = res.config.path
 
   const fallbackMessage = `Request to ${path} failed with status code ${res.status}`
 
