@@ -22,26 +22,16 @@ export async function fListBooksApi(http: IHttpClient, _input: BooksListInput): 
 
     return success(data);
   } catch (err) {
-    if (err instanceof AxiosError) {
+    return handleHttpFail(err, path);
+  }
+}
 
-      if (err.code === 'ECONNREFUSED') {
-        const msg = {
-          statusCode: 500,
-          metatata: {
-            message: 'Fail to connect to server',
-            endpoint: path,
-            details: err.message
-          },
-          error: {
-            unavaible: true
-          }
-        } as BadRequestError<BooksListError>
+function handleHttpFail(err: any, path: string) {
+  if (err instanceof AxiosError) {
 
-        return fail(msg)
-      }
-
+    if (err.code === 'ECONNREFUSED') {
       const msg = {
-        statusCode: 500,
+        statusCode: 503,
         metatata: {
           message: 'Fail to connect to server',
           endpoint: path,
@@ -51,10 +41,26 @@ export async function fListBooksApi(http: IHttpClient, _input: BooksListInput): 
 
       return fail(msg)
     }
-    console.log('hey')
-    console.log(err)
-    fail(err)
+
+    const msg = {
+      statusCode: 500,
+      metatata: {
+        message: 'Fail to connect to server',
+        endpoint: path,
+        details: err.message
+      },
+    } as BadRequestError<BooksListError>
+
+    return fail(msg)
   }
+
+  return handleHttpFail({
+    status: 500,
+    config: { path, baseURL: '' },
+    data: err
+  }, "Fail to login");
 }
+
+
 
 export const listBooksRecipe = useBookAxios(fListBooksApi);

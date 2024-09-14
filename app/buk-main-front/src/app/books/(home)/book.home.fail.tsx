@@ -3,7 +3,7 @@ import { BadRequestError } from "@/utils/requests/bad-requests";
 
 export function handleBookFail(error: BadRequestError<BooksListError>) {
   console.error(error)
-  if (error.error?.unavaible === true) {
+  if (error.statusCode === 503) {
     return <div>
       <h1>Sorry. Books are unavaible now</h1>
     </div>;
