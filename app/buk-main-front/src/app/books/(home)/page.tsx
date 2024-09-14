@@ -1,11 +1,11 @@
 import { listBooksRecipe } from "@/providers/books/books.provider.list";
-import { BooksListError, BooksListOutput } from "@/providers/books/types/books.list.types";
-import { BadRequestError } from "@/utils/requests/bad-requests";
+import { BookCard } from "./book.card";
+import { handleBookFail as HandleBookFail } from "./book.home.fail";
 
 export default async function Home() {
   const booksRes = await listBooksRecipe({})
 
-  if (booksRes.kind == "failure") return handleBookFail(booksRes.error);
+  if (booksRes.kind == "failure") return HandleBookFail(booksRes.error);
 
   return (
     <div>
@@ -18,21 +18,3 @@ export default async function Home() {
     </div>
   );
 }
-
-function BookCard(book: BooksListOutput) {
-  return (
-    <div className="w-40 h-60 bg-red-600" key={book.id}>
-      {book.title} - {(book.price / 100).toFixed(2)}
-    </div>
-  )
-}
-
-function handleBookFail(error: BadRequestError<BooksListError>) {
-  console.error(error)
-  return <div>
-    <h1>Fail to load books</h1>
-    <p>{error.statusCode}</p>
-    <p>{error.metatata.message}</p>
-  </div>;
-}
-

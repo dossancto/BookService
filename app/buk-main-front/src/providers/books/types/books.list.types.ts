@@ -17,4 +17,6 @@ export type BooksListOutput = {
   release_date: Date
 }
 
-export type BooksListError = {}
+export type BooksListError = {
+  unavaible: boolean
+}
