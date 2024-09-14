@@ -1,7 +1,7 @@
 import { fail, Result, success } from "@/utils/errors-handlers/result-pattern";
 import { IHttpClient } from "../http/http.provider.types";
 import { useBookAxios } from "./books.provider";
-import { BadRequestError, handleHttpFail } from "@/utils/requests/bad-requests";
+import { BadRequestError } from "@/utils/requests/bad-requests";
 import { isFailStatusCode } from "@/utils/requests/status-code";
 import { BooksListError, BooksListInput, BooksListOutput } from "./types/books.list.types";
 import { AxiosError } from "axios";
@@ -16,11 +16,10 @@ export async function fListBooksApi(http: IHttpClient, _input: BooksListInput): 
       return handleHttpFail(res, "Fail to login");
     }
 
-    const json = res.data;
+    const json = res.data as BooksListOutput[];
 
-    const data = json as BooksListOutput[];
+    return success(json);
 
-    return success(data);
   } catch (err) {
     return handleHttpFail(err, path);
   }
@@ -45,7 +44,7 @@ function handleHttpFail(err: any, path: string) {
     const msg = {
       statusCode: 500,
       metatata: {
-        message: 'Fail to connect to server',
+        message: 'Request failed',
         endpoint: path,
         details: err.message
       },
