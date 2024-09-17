@@ -5,7 +5,7 @@ defmodule BooksManagmentWeb.BookJSON do
   Renders a list of books.
   """
   def index(%{books: books}) do
-    %{data: for(book <- books, do: data(book))}
+    for(book <- books, do: data(book))
   end
 
   @doc """

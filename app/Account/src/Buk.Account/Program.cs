@@ -57,6 +57,12 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+using (var serviceScope = app.Services.GetRequiredService<IServiceScopeFactory>().CreateScope())
+{
+    var context = serviceScope.ServiceProvider.GetRequiredService<EfPostgresUserDbContext>();
+    context.Database.EnsureCreated();
+}
+
 /*
 app
    .UseApplicationErrorHandler()

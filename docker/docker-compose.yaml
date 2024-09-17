@@ -37,6 +37,8 @@ services:
     build:
       context: ../app/Account/src/Buk.Account/
       dockerfile: account.Dockerfile
+    depends_on:
+      - postgres
     ports:
       - "5246:5246"
     environment:
@@ -61,6 +63,8 @@ services:
     build:
       context: ../app/books_managment/
       dockerfile: dev.Dockerfile
+    depends_on:
+      - postgres
     ports:
       - 4000:4000
     environment:
@@ -79,6 +83,8 @@ services:
     restart: always
     ports:
       - "8888:80"
+    depends_on:
+      - postgres
     environment:
       PGADMIN_DEFAULT_EMAIL: test@example.com
       PGADMIN_DEFAULT_PASSWORD: postgres
