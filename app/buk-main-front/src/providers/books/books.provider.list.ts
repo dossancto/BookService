@@ -1,7 +1,7 @@
 import { fail, Result, success } from "@/utils/errors-handlers/result-pattern";
-import { IHttpClient } from "../http/http.provider.types";
+import { HttpResponse, IHttpClient } from "../http/http.provider.types";
 import { useBookAxios } from "./books.provider";
-import { BadRequestError } from "@/utils/requests/bad-requests";
+import { BadRequestError, handleHttpFail } from "@/utils/requests/bad-requests";
 import { isFailStatusCode } from "@/utils/requests/status-code";
 import { BooksListError, BooksListInput, BooksListOutput } from "./types/books.list.types";
 import { AxiosError } from "axios";
@@ -13,7 +13,7 @@ export async function fListBooksApi(http: IHttpClient, _input: BooksListInput): 
     const res = await http.get(path);
 
     if (isFailStatusCode(res.status)) {
-      return handleHttpFail(res, "Fail to login");
+      return handleLocalHttpFail(res, "");
     }
 
     const json = res.data as BooksListOutput[];
@@ -21,11 +21,11 @@ export async function fListBooksApi(http: IHttpClient, _input: BooksListInput): 
     return success(json);
 
   } catch (err) {
-    return handleHttpFail(err, path);
+    return handleLocalHttpFail(err, path);
   }
 }
 
-function handleHttpFail(err: any, path: string) {
+function handleLocalHttpFail(err: any, path: string) {
   if (err instanceof AxiosError) {
 
     if (err.code === 'ECONNREFUSED') {
@@ -53,7 +53,7 @@ function handleHttpFail(err: any, path: string) {
     return fail(msg)
   }
 
-  return handleHttpFail({
+  return handleHttpFail<BooksListError>({
     status: 500,
     config: { path, baseURL: '' },
     data: err
